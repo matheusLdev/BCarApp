@@ -17,7 +17,7 @@ export default function BrandsList({ navigation }: any) {
       data={brands}
       keyExtractor={(item) => item.codigo.toString()}
       renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('Models', { brandId: item.codigo })}>
+          <TouchableOpacity onPress={() => navigation.navigate('Models', { brandId: item.codigo, brandName: item.nome })}>
             <BrandItem>
               <BrandText>{item.nome}</BrandText>
             </BrandItem>

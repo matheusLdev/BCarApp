@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 
 export default function Models({ route }: any) {
-  const { brandId } = route.params;
+  const { brandId, brandName } = route.params;
   const [models, setModels] = useState([]);
   const { goBack } = useNavigation();
 
@@ -21,7 +21,7 @@ export default function Models({ route }: any) {
         <BackButton onPress={() => goBack()}>
           <Icon name="chevron-left" size={28} color="#ffffff" />
         </BackButton>
-        <Title>Modelos da {route.params.brandName}</Title>
+        <Title>Models {brandName}</Title>
       </Header>
       <ModelsList
         data={models}
