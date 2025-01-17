@@ -4,8 +4,9 @@ import { useAuth } from '../contexts/AuthContext';
 import SignIn from '../screens/SignIn';
 import Home from '../screens/Home';
 import Models from '../screens/Models';
+import { RootStackParamList } from './types';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Routes() {
   const { user } = useAuth();
