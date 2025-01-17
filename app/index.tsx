@@ -1,11 +1,14 @@
 import React from 'react';
 import { AuthProvider } from '../src/contexts/AuthContext';
 import Routes from '../src/routes';
+import { AlertProvider } from '@/src/hooks/useAlert';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Routes />
-    </AuthProvider>
+    <AlertProvider>
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
+    </AlertProvider>
   );
 }
