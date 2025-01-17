@@ -1,5 +1,5 @@
 export type RootStackParamList = {
   SignIn: undefined;
   Home: undefined;
-  Models: undefined;
+  Models: { brandId: number; brandName: string };
 };

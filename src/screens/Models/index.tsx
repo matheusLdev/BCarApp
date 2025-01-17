@@ -1,18 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import { Container, Header, BackButton, Title, ModelsList, ModelItem, ModelText } from './styles';
 import Icon from 'react-native-vector-icons/Feather';
 import axios from 'axios';
+import { Model } from '@/src/types';
+import { useAlert } from '@/src/hooks/useAlert';
+import { RootStackParamList } from '@/src/routes/types';
 
-export default function Models({ route }: any) {
+type ModelsRouteProp = RouteProp<RootStackParamList, 'Models'>;
+
+export default function Models({ route }: { route: ModelsRouteProp }) {
   const { brandId, brandName } = route.params;
-  const [models, setModels] = useState([]);
+  const [models, setModels] = useState<Model[]>([]);
   const { goBack } = useNavigation();
+  const { showAlert } = useAlert();
+
+  const loadData = async () => {
+    try {
+      const response = await axios.get(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${brandId}/modelos`);
+      setModels(response.data.modelos);
+    } catch (error: any) {
+      showAlert(error.message, 'error');
+    }
+  };
 
   useEffect(() => {
-    axios.get(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${brandId}/modelos`)
-      .then((response) => setModels(response.data.modelos))
-      .catch((error) => console.error(error));
+    loadData();
   }, [brandId]);
 
   return (
@@ -25,8 +38,8 @@ export default function Models({ route }: any) {
       </Header>
       <ModelsList
         data={models}
-        keyExtractor={(item) => item.codigo.toString()}
-        renderItem={({ item }) => (
+        keyExtractor={(item: Model) => item.codigo.toString()}
+        renderItem={({ item }: { item: Model }) => (
           <ModelItem>
             <ModelText>{item.nome}</ModelText>
           </ModelItem>
