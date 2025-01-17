@@ -26,9 +26,10 @@ export default function SignIn() {
       await signIn(data.user, data.password);
       navigate('Home');
     } catch (error: any) {
-      showAlert(error.message || 'Login failed, please try again', 'error');
+      showAlert(error.message, 'error');
     }
   };
+
   return (
     <Container>
       <Logo source={Car} />

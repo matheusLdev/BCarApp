@@ -6,7 +6,9 @@ export const AlertModal = styled.View`
   right: 10px;
   padding: 8px;
   border-radius: 10px;
-  width: 150px;
+  min-width: 150px;
+  max-width: 250px;
+  min-height: 70px;
   flex-direction: row;
   align-items: center;
   justify-content: center;
