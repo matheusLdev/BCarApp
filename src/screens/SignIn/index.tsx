@@ -1,72 +1,67 @@
 import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { useAuth } from '../../contexts/AuthContext';
-import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
+import { Container, Input, Button, ButtonText, ErrorMessage, Logo, AppName } from './styles';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/src/routes/types';
+import Car from '@/assets/images/car.png'
+import { useAlert } from '@/src/hooks/useAlert';
 
-const Container = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: #f5f5f5;
-`;
+type SignInFormData = {
+  user: string;
+  password: string;
+}
 
-const Input = styled.TextInput`
-  width: 80%;
-  padding: 12px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-`;
-
-const Button = styled.TouchableOpacity`
-  background-color: #007bff;
-  padding: 12px 24px;
-  border-radius: 8px;
-`;
-
-const ButtonText = styled.Text`
-  color: white;
-  font-weight: bold;
-`;
+type NavigationProps = NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
 
 export default function SignIn() {
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm<SignInFormData>();
   const { signIn } = useAuth();
-  const { navigate } = useNavigation();
+  const { navigate } = useNavigation<NavigationProps>();
+  const { showAlert } = useAlert()
 
-  const onSubmit = async (data: { user: string; password: string }) => {
+  const onSubmit: SubmitHandler<SignInFormData> = async (data) => {
     try {
       await signIn(data.user, data.password);
       navigate('Home');
     } catch (error: any) {
-      alert(error.message);
+      showAlert(error.message || 'Login failed, please try again', 'error');
     }
   };
-
   return (
     <Container>
+      <Logo source={Car} />
+      <AppName>BCar</AppName>
       <Controller
         control={control}
         name="user"
-        render={({ field: { onChange, value } }) => (
-          <Input
-            placeholder="Username"
-            value={value}
-            onChangeText={onChange}
-          />
+        rules={{ required: 'Username is required' }}
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <>
+            <Input
+              placeholder="Username"
+              value={value}
+              onChangeText={onChange}
+            />
+            {error && <ErrorMessage>{error.message}</ErrorMessage>}
+          </>
         )}
       />
       <Controller
         control={control}
         name="password"
-        render={({ field: { onChange, value } }) => (
-          <Input
-            placeholder="Password"
-            secureTextEntry
-            value={value}
-            onChangeText={onChange}
-          />
+        rules={{ required: 'Password is required' }}
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <>
+            <Input
+              placeholder="Password"
+              secureTextEntry
+              value={value}
+              onChangeText={onChange}
+            />
+            {error && <ErrorMessage>{error.message}</ErrorMessage>}
+          </>
         )}
       />
       <Button onPress={handleSubmit(onSubmit)}>
